@@ -1,0 +1,26 @@
+name: 9router Example
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  call-9router:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Call 9router API
+        env:
+          ROUTER_API_KEY: ${{ secrets.ROUTER_API_KEY }}
+        run: |
+          curl -X POST "https://api.9router.com/v1/chat/completions" \
+            -H "Authorization: Bearer $ROUTER_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "model": "anthropic/claude-sonnet-4",
+              "messages": [{"role": "user", "content": "Diga olá do GitHub Actions"}],
+              "max_tokens": 100
+            }'
